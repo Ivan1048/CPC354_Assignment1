@@ -7,6 +7,7 @@
 - Geometry and pose calculation should remain pure functions without DOM or WebGL dependencies.
 - All stroke polygons must be counter-clockwise, and triangle winding must agree with outward normals.
 - For geometry, animation, timing, or math changes, run `npm run check` and `npm test`. For UI changes, also inspect browser behavior and phone scrolling.
-- Include actual AI assistance in the written report; do not invent team authorship, prompts, or verification results. Keep personal video scripts in `docs/video/` intact unless the user asks to edit them.
+- Include actual AI assistance in the written report; do not invent team authorship, prompts, or verification results. Keep personal video scripts in `docs/video/` local and intact; do not stage or publish them.
+- Commit changes without creating pull requests unless explicitly requested. Push only when requested.
 - Local course PDFs and review/browser artifacts are ignored. Do not publish them as part of unrelated code changes.
 - See `README.md` for running the app and module responsibilities.

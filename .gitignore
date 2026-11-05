@@ -11,3 +11,6 @@ Thumbs.db
 # Local course material, kept in the workspace rather than published with the app.
 /ASSIGNMENT 1.pdf
 /Grading_Rubric_100_Marks.pdf
+
+# Personal presentation scripts are local only.
+/docs/video/
