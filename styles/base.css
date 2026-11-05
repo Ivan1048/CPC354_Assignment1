@@ -1,0 +1,36 @@
+/* Theme and document defaults, preserved from the reviewed application. */
+:root {
+  --font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+  --bg-page: #070c19;
+  --bg-panel: rgba(12, 20, 38, 0.92);
+  --border-panel: #2a3d5c;
+  --border-group: #25344d;
+  --border-input: #314568;
+  --bg-input: #111c33;
+  --text-primary: #eaf2ff;
+  --text-muted: #9caecb;
+  --text-accent: #7ea8ff;
+  --btn-bg: #24436d;
+  --btn-border: #496997;
+  --btn-hover: #315783;
+  --btn-primary-bg: linear-gradient(120deg, #4f75e6, #6959d9);
+  --btn-primary-border: #8594ee;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  background: radial-gradient(
+    circle at 55% 35%,
+    #182a4b 0%,
+    #080d1c 55%,
+    #050914 100%
+  );
+  overflow: hidden;
+}
