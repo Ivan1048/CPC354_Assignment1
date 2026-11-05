@@ -1,0 +1,16 @@
+{
+  "name": "cpc354-assignment1",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A procedural WebGL 3D word logo and animated TV ident.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "start": "node scripts/serve.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "node --test"
+  }
+}

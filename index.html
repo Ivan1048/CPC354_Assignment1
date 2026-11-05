@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="CPC354 procedural WebGL word logo and animated TV ident."
+    />
+    <title>CPC354 · WebGL 3D TV Ident</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="./styles/base.css" />
+    <link rel="stylesheet" href="./styles/controls.css" />
+    <link rel="stylesheet" href="./styles/layout.css" />
+    <script type="module" src="./src/main.js"></script>
+  </head>
+  <body>
+    <div class="app">
+      <aside class="panel">
+        <header>
+          <div class="eyebrow">CPC354 Assignment 1</div>
+          <h1>3D TV Ident Studio</h1>
+        </header>
+        <div class="group">
+          <h2>Logo Geometry</h2>
+
+          <label for="word">Word (1–4 characters)</label>
+          <input
+            id="word"
+            type="text"
+            aria-describedby="wordHelp"
+            maxlength="4"
+            value="LOGO"
+            placeholder="Enter A–Z or 0–9"
+            spellcheck="false"
+          />
+          <small id="wordHelp"
+            >Use 1–4 letters or digits. Geometry and color changes reset the
+            animation.</small
+          >
+
+          <label for="depth">
+            <span>Extrusion Depth</span>
+            <output id="depthValue">0.45</output>
+          </label>
+          <input
+            id="depth"
+            type="range"
+            min="0.10"
+            max="1.20"
+            step="0.05"
+            value="0.45"
+          />
+
+          <label for="frontColor">
+            <span>Front Face Color</span>
+            <input id="frontColor" type="color" value="#6ddcf7" />
+          </label>
+
+          <label for="sideColor">
+            <span>Side Face Color</span>
+            <input id="sideColor" type="color" value="#745bfa" />
+          </label>
+
+          <label for="colorMode">Color Mode</label>
+          <select id="colorMode">
+            <option value="dual">Dual Color (Front / Side)</option>
+            <option value="single">Single Color (Uniform)</option>
+            <option value="rainbow">Rainbow (Per Letter)</option>
+          </select>
+        </div>
+        <div class="group">
+          <h2>Animation Controls</h2>
+
+          <label for="speed">
+            <span>Playback Speed</span>
+            <output id="speedValue">1.00×</output>
+          </label>
+          <input
+            id="speed"
+            type="range"
+            min="0.25"
+            max="3.00"
+            step="0.05"
+            value="1.00"
+          />
+
+          <label for="motion">Final Looping Motion</label>
+          <select id="motion">
+            <option value="hover">Hover + Gentle Rotation</option>
+            <option value="spin">Continuous 360° Rotation</option>
+            <option value="orbit">Figure-Eight Drift</option>
+          </select>
+
+          <label class="check">
+            <input id="lighting" type="checkbox" checked />
+            <span>Enable Directional Lighting</span>
+          </label>
+
+          <label class="check">
+            <input id="autoLoop" type="checkbox" />
+            <span>Repeat Full Ident Sequence</span>
+          </label>
+
+          <div class="buttons">
+            <button class="primary" id="play">Start Animation</button>
+            <button id="pause" disabled>Pause</button>
+            <button id="reset">Reset</button>
+          </div>
+
+          <div class="shortcuts-box">
+            <div class="shortcuts-title">Keyboard Shortcuts</div>
+            <ul class="shortcuts-list">
+              <li class="shortcut-item">
+                <span>Start Animation</span>
+                <kbd>Enter</kbd>
+              </li>
+              <li class="shortcut-item">
+                <span>Pause / Resume</span>
+                <kbd>Space</kbd>
+              </li>
+              <li class="shortcut-item">
+                <span>Reset</span>
+                <kbd>R</kbd>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      <main class="stage">
+        <canvas
+          id="glcanvas"
+          role="img"
+          aria-label="Animated WebGL 3D Word Logo"
+        ></canvas>
+
+        <div class="hud">
+          <div class="pill">CPC354 / WEBGL</div>
+          <div class="pill" id="status" role="status">Ready to start</div>
+        </div>
+
+        <div class="foot">
+          <span
+            >3D Geometry Programmatically Extruded from 2D Stroke Contours</span
+          >
+          <span id="fps">— FPS</span>
+        </div>
+
+        <div id="error" class="error" role="alert"></div>
+      </main>
+    </div>
+    <noscript
+      >This WebGL application requires JavaScript. Enable it and reload the
+      page.</noscript
+    >
+  </body>
+</html>
