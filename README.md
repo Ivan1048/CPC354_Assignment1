@@ -44,9 +44,6 @@ scripts/
   serve.mjs                Local static server
   check.mjs                JavaScript syntax checks
 tests/                     Geometry, animation, playback, and matrix regression tests
-docs/
-  ARCHITECTURE.md           Data flow, algorithms, and extension guidance
-  AI_ASSISTANCE.md          Record of assistance during this refactor
 ```
 
 ## Controls and animation
@@ -77,4 +74,4 @@ The implementation follows the supplied assignment brief and rubric. The brief a
 
 The senior project was reviewed as a reference; its bitmap-cube method is different from this project's stroke extrusion. Describe the actual algorithms here in the report. The supplied brief does not explicitly require the senior project's `Common` helper library; follow any additional lecturer instruction if one exists.
 
-The course PDFs and earlier local review artifacts stay in the workspace and are ignored by Git. See [architecture](docs/ARCHITECTURE.md) for technical explanations and [AI assistance](docs/AI_ASSISTANCE.md) for the refactor disclosure record. That record is not a completed report or a complete history of the original implementation.
+The course PDFs and earlier local review artifacts stay in the workspace and are ignored by Git. Include the required AI and external-code disclosure in the written report.
