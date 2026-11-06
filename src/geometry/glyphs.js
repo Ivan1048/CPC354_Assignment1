@@ -1,13 +1,16 @@
 // Standard orthogonal rectangular segments defined as [minX, minY, maxX, maxY]
 // Normalized to unit cell: width approx 1.0, height approx 1.5
 export const RECT_SEGMENTS = {
+  DT: [0.09, 1.35, 0.68, 1.49],
+  DB: [0.09, 0.02, 0.68, 0.16],
+  DR: [0.83, 0.27, 0.98, 1.24],
   T: [0.09, 1.35, 0.91, 1.49], // Top horizontal bar
   M: [0.13, 0.7, 0.87, 0.84], // Middle horizontal crossbar
   B: [0.09, 0.02, 0.91, 0.16], // Bottom horizontal bar
   UL: [0.02, 0.77, 0.17, 1.4], // Upper-left vertical stroke
   UR: [0.83, 0.77, 0.98, 1.4], // Upper-right vertical stroke
-  LL: [0.02, 0.09, 0.17, 0.76], // Lower-left vertical stroke
-  LR: [0.83, 0.09, 0.98, 0.76], // Lower-right vertical stroke
+  LL: [0.02, 0.09, 0.17, 0.79], // Lower-left vertical stroke
+  LR: [0.83, 0.09, 0.98, 0.79], // Lower-right vertical stroke
   CV: [0.43, 0.08, 0.57, 1.41], // Center full-height vertical
   LOW: [0.43, 0.08, 0.57, 0.78], // Lower-center vertical stem
   GM: [0.43, 0.7, 0.87, 0.84], // G half-width middle bar (right half only: centre→right edge, gives G its inner shelf)
@@ -15,6 +18,8 @@ export const RECT_SEGMENTS = {
 
 // Diagonal segments defined as [startX, startY, endX, endY]
 export const DIAG_SEGMENTS = {
+  DC1: [0.62, 1.42, 0.91, 1.18],
+  DC2: [0.91, 0.33, 0.62, 0.09],
   D1: [0.87, 1.43, 0.13, 0.08], // Diagonal top-right to bottom-left
   D2: [0.13, 1.43, 0.87, 0.08], // Diagonal top-left to bottom-right
   D3: [0.11, 1.4, 0.5, 0.76], // Upper-left to center
@@ -37,7 +42,7 @@ export const GLYPH_MAP = {
   A: "T,M,UL,UR,LL,LR",
   B: "T,M,B,UL,LL,UR,LR",
   C: "T,B,UL,LL",
-  D: "T,B,UL,LL,UR,LR",
+  D: "DT,DB,UL,LL,DR,DC1,DC2",
   E: "T,M,B,UL,LL",
   F: "T,M,UL,LL",
   G: "T,B,UL,LL,LR,GM",
@@ -60,7 +65,7 @@ export const GLYPH_MAP = {
   X: "D1,D2",
   Y: "D3,D4,LOW",
   Z: "T,B,D1",
-  0: "T,B,UL,LL,UR,LR",
+  0: "T,B,UL,LL,UR,LR,D5",
   1: "UR,LR",
   2: "T,M,B,UR,LL",
   3: "T,M,B,UR,LR",

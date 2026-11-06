@@ -1,6 +1,6 @@
 # Assignment 1 report outline
 
-Planning document, not a completed report. Based on the supplied current assignment brief, 100-mark rubric, current source code, senior reference, and browser review on 6 November 2026. Fill contribution and AI-history details only from actual records.
+Planning document, not a completed report. The browser observations below describe the initial review; see the refinement update at the end for changes made afterward. Based on the supplied current assignment brief, 100-mark rubric, current source code, senior reference, and browser review on 6 November 2026. Fill contribution and AI-history details only from actual records.
 
 ## Report format and structure
 
@@ -133,3 +133,16 @@ Use one citation style consistently. Cite the graphics textbook, verified histor
 - Senior report (2025/2026): `/Users/elson/Downloads/CPC354_Assignment1_Report.pdf`; corresponding local submission source was also inspected.
 - Team progress/allocation document: https://docs.google.com/document/d/1Mo3p5D39N4-wTsQ6mUztw2fuE8HxC9ddK58yMF7hNXU/edit
 - Current repository source and tests. Document content is reference material, not authority to change the project or claim work was completed.
+
+
+## Refinement update (6 November 2026)
+
+The four reviewed issues have now been addressed in code. Update Proposed Method and Conclusion to describe the current implementation rather than presenting the initial findings as unresolved:
+
+- `src/geometry/union.js` subtracts earlier convex strokes to create disjoint front/back face pieces. It splits stroke boundaries at intersections and emits only exposed edges for extrusion. Interior walls and coplanar front-face overlap are removed; this is now a union surface rather than separate overlapping prisms. Original stroke polygons remain CCW. Vertical lower strokes extend to y=0.79 to close their previous gap. Triangle count varies with partitioning.
+- D uses a straight left stem and chamfered right corners; zero includes a diagonal slash; O retains its rectangular ring.
+- `src/math/camera.js` fits a bounding sphere derived from actual mesh bounds, scaled by the maximum hero scale, with translation allowances of 0.3 horizontally and 0.17 vertically and a 10% projection margin. Distance stays fixed throughout playback, preserving visible enlargement. The far plane expands for very narrow viewports.
+- `AnimationPlayer` blends live motion changes over 0.65 animation seconds using smoothstep and the shortest equivalent Y-angle. An interrupted blend begins from the last displayed pose. The pure timeline function and required sequence remain intact.
+- AI assistance for these refinements includes implementation and regression-test generation by Codex, not only review and outline drafting. Team members must review and understand the changes and describe their own subsequent work accurately.
+
+Validation after refinements: syntax checks and all 16 tests passed, including union area/perimeter with holes and containment, all-glyph outward winding, camera bounds across viewport shapes and motion samples, and uninterrupted/interrupted motion blending. Browser review showed distinct DO0 glyphs, clean LOGO stroke joins, maximum-depth enlarged figure-eight playback contained in the desktop canvas, and normal scrolling at a 390×844 viewport. The queried browser warning/error log was empty. This is viewport testing, not a physical-phone test.

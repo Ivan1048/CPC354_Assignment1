@@ -4,11 +4,11 @@ import { buildGeometry, FLOATS_PER_VERTEX } from "../src/geometry/extrude.js";
 import { GLYPH_MAP } from "../src/geometry/glyphs.js";
 import { createState, sanitizeWord } from "../src/state.js";
 
-test("all 36 glyphs produce finite, closed prisms whose triangle winding agrees with their normals", () => {
+test("all 36 glyphs produce finite union meshes whose triangle winding agrees with their normals", () => {
   assert.equal(Object.keys(GLYPH_MAP).length, 36);
   for (const word of Object.keys(GLYPH_MAP)) {
     const { vertices, vertexCount } = buildGeometry({ ...createState(), word });
-    assert.equal(vertexCount, GLYPH_MAP[word].split(",").length * 36);
+    assert.ok(vertexCount > 0 && vertexCount % 3 === 0);
     assert.ok(vertices.every(Number.isFinite), `${word}: finite vertices`);
     for (
       let offset = 0;
@@ -57,13 +57,13 @@ test("dual, single, and rainbow modes assign the intended vertex colors", () => 
   };
   const dual = buildGeometry(settings).vertices;
   assert.deepEqual(Array.from(dual.slice(6, 9)), [1, 0, 0]);
-  assert.deepEqual(Array.from(dual.slice(6 * 9 + 6, 6 * 9 + 9)), [0, 1, 0]);
+  assert.deepEqual(Array.from(dual.slice(3 * 9 + 6, 3 * 9 + 9)), [0, 1, 0]);
   const single = buildGeometry({ ...settings, colorMode: "single" }).vertices;
   for (let offset = 6; offset < single.length; offset += 9) {
     assert.deepEqual(Array.from(single.slice(offset, offset + 3)), [1, 0, 0]);
   }
   const rainbow = buildGeometry({ ...settings, colorMode: "rainbow" }).vertices;
-  const secondLetter = GLYPH_MAP.L.split(",").length * 36 * 9;
+  const secondLetter = buildGeometry({ ...settings, word: "L" }).vertices.length;
   assert.notDeepEqual(
     Array.from(rainbow.slice(6, 9)),
     Array.from(rainbow.slice(secondLetter + 6, secondLetter + 9)),
@@ -79,4 +79,10 @@ test("empty input clears geometry and unsupported input cannot silently produce 
     /Unsupported character/,
   );
   assert.equal(sanitizeWord("a!b-34z"), "AB34");
+});
+
+test('D, O and zero have distinct geometry', () => {
+  const meshes = ['D','O','0'].map(word=>buildGeometry({...createState(),word}).vertices);
+  assert.notDeepEqual(meshes[0],meshes[1]);
+  assert.notDeepEqual(meshes[1],meshes[2]);
 });

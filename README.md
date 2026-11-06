@@ -28,8 +28,10 @@ src/
   geometry/
     glyphs.js              A–Z / 0–9 strokes and counter-clockwise polygons
     extrude.js             Pure CPU mesh generation and mesh bounds
+    union.js               Stroke union faces and exposed boundary edges
   math/
     mat4.js                Column-major 4×4 matrix operations
+    camera.js              Bounds-based camera fitting for the motion envelope
   animation/
     ident.js               Pure animation timeline and final motion paths
     player.js              Start, pause, reset, and elapsed-time integration
@@ -52,7 +54,9 @@ tests/                     Geometry, animation, playback, and matrix regression 
 - Configure extrusion depth and front/side colors before starting. Geometry or color changes reset playback.
 - Choose dual, single, or per-letter rainbow colors; toggle directional lighting.
 - Start the sequence: rotate right 180°, return, rotate left 180°, return, enlarge, then move continuously.
-- Select hover, continuous spin, or figure-eight drift for the final motion.
+- Select hover, continuous spin, or figure-eight drift for the final motion. Live mode changes blend over 0.65 animation seconds, including interrupted changes.
+- Stroke faces are partitioned into non-overlapping pieces, and only exposed union boundaries are extruded. Vertical stroke joins overlap to avoid gaps; D has chamfered right corners and zero has a slash.
+- The camera fits a sphere around the actual mesh bounds at hero scale, plus the final-motion translation envelope. Its distance stays fixed during playback so enlargement remains visible without camera pumping.
 - Change playback speed while running. Pause/resume preserves the current pose; Reset returns to the initial pose without restoring all settings.
 - Full-sequence repeat is optional and initially off. When enabled, nine seconds of final motion are followed by a smooth 1.4-second return before the sequence repeats.
 - Keyboard shortcuts: Enter starts, Space pauses/resumes, R resets. Inputs retain their normal typing behavior; focused buttons retain native Enter/Space activation.

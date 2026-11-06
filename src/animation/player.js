@@ -1,4 +1,4 @@
-import { computeIdentPose, initialPose } from "./ident.js";
+import { computeIdentPose, initialPose, smoothstep } from "./ident.js";
 
 /** Owns playback time without depending on the DOM, a camera, or a WebGL context. */
 export class AnimationPlayer {
@@ -6,11 +6,17 @@ export class AnimationPlayer {
   elapsed = 0;
   paused = false;
   #lastTimestamp = null;
+  #motion = null;
+  #transition = null;
+  #pose = null;
 
   start() {
     this.phase = "playing";
     this.elapsed = 0;
     this.paused = false;
+    this.#motion = null;
+    this.#transition = null;
+    this.#pose = null;
     this.resetClock();
   }
 
@@ -18,6 +24,9 @@ export class AnimationPlayer {
     this.phase = "ready";
     this.elapsed = 0;
     this.paused = false;
+    this.#motion = null;
+    this.#transition = null;
+    this.#pose = null;
     this.resetClock();
   }
 
@@ -46,8 +55,28 @@ export class AnimationPlayer {
   }
 
   getPose(settings) {
-    return this.phase === "playing"
-      ? computeIdentPose(this.elapsed, settings)
-      : initialPose();
+    if (this.phase !== "playing") return initialPose();
+    const motion = settings.motion ?? "hover";
+    const target = computeIdentPose(this.elapsed, settings);
+    if (this.#motion !== null && motion !== this.#motion && this.#pose) {
+      this.#transition = { start: this.elapsed, from: this.#pose };
+    }
+    this.#motion = motion;
+    let pose = target;
+    if (this.#transition) {
+      const t = smoothstep((this.elapsed - this.#transition.start) / 0.65);
+      const from = this.#transition.from;
+      // Choose the equivalent target angle nearest the previous orientation.
+      const difference = target.rotY - from.rotY;
+      const angle = from.rotY + Math.atan2(Math.sin(difference), Math.cos(difference));
+      pose = { ...target };
+      for (const key of ["rotX", "scale", "tx", "ty", "rotY"]) {
+        const end = key === "rotY" ? angle : target[key];
+        pose[key] = from[key] + (end - from[key]) * t;
+      }
+      if (t === 1) this.#transition = null;
+    }
+    this.#pose = pose;
+    return pose;
   }
 }

@@ -111,3 +111,16 @@ test("background tabs do not advance time and slow visible frames retain real-ti
   player.update(5500, 1);
   close(player.elapsed, 1);
 });
+
+test('motion changes and interrupted blends preserve pose, including while paused',()=>{
+  const player=new AnimationPlayer();player.start();player.elapsed=30;
+  const before=player.getPose({motion:'spin'});
+  samePose(before,player.getPose({motion:'orbit'}));
+  player.elapsed+=0.3;
+  const middle=player.getPose({motion:'orbit'});
+  samePose(middle,player.getPose({motion:'hover'}));
+  player.togglePause();
+  samePose(middle,player.getPose({motion:'hover'}));
+  player.elapsed+=0.7;
+  samePose(player.getPose({motion:'hover'}),computeIdentPose(player.elapsed,{motion:'hover'}));
+});

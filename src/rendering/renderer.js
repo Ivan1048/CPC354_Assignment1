@@ -1,3 +1,4 @@
+import { fitCameraDistance } from "../math/camera.js";
 import { STRIDE_BYTES } from "../geometry/extrude.js";
 import {
   createPerspectiveMatrix,
@@ -56,6 +57,7 @@ export class WebGLRenderer {
     this.program = createProgram(gl);
     this.buffer = gl.createBuffer();
     this.vertexCount = 0;
+    this.bounds = { min: [0,0,0], max: [0,0,0] };
     gl.useProgram(this.program);
     gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
 
@@ -93,6 +95,7 @@ export class WebGLRenderer {
       this.gl.STATIC_DRAW,
     );
     this.vertexCount = mesh.vertexCount;
+    this.bounds = mesh.bounds;
   }
 
   resize() {
@@ -110,13 +113,8 @@ export class WebGLRenderer {
     this.resize();
     const { gl, canvas } = this;
     const aspect = canvas.width / canvas.height;
-    const wordWidth = Math.max(1, settings.word.length * 1.25 - 0.25);
-    const cameraDistance = Math.max(
-      5.8,
-      (wordWidth * 1.25) / aspect,
-      3 / aspect,
-    );
-    const projection = createPerspectiveMatrix(Math.PI / 3, aspect, 0.1, 100);
+    const cameraDistance = fitCameraDistance(this.bounds, aspect);
+    const projection = createPerspectiveMatrix(Math.PI / 3, aspect, 0.1, Math.max(100, cameraDistance * 2));
     const view = createTranslationMatrix(0, 0, -cameraDistance);
 
     // Rightmost operation acts first: scale, X/Y rotations, then translation.

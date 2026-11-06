@@ -1,3 +1,4 @@
+import { unionStrokes } from "./union.js";
 import {
   RECT_SEGMENTS,
   DIAG_SEGMENTS,
@@ -64,89 +65,38 @@ export function buildGeometry(state) {
       throw new Error("Unsupported character in word: " + letter);
     }
 
-    const segmentNames = strokes.split(",");
-    for (let s = 0; s < segmentNames.length; s++) {
-      const seg = segmentNames[s];
-
-      // Generate 2D quad polygon in local space
-      let polygon2D;
-      if (RECT_SEGMENTS[seg]) {
-        const r = RECT_SEGMENTS[seg];
-        polygon2D = createRectanglePolygon(r[0], r[1], r[2], r[3]);
-      } else if (DIAG_SEGMENTS[seg]) {
-        const d = DIAG_SEGMENTS[seg];
-        polygon2D = createDiagonalPolygon(d[0], d[1], d[2], d[3]);
-      } else {
-        continue;
-      }
-
-      // Center polygon vertically (Y - 0.75) and offset horizontally by letter slot
-      const shifted2D = polygon2D.map(([px, py]) => [px + xOffset, py - 0.75]);
-
-      // Construct 3D front (+Z) and back (-Z) vertices
-      const frontVertices = shifted2D.map(([px, py]) => [px, py, zFront]);
-      const backVertices = shifted2D.map(([px, py]) => [px, py, zBack]);
-
-      // --- 1. FRONT FACE (Normal pointing towards viewer: [0, 0, 1]) ---
-      // Triangulate CCW quad: (0, 1, 2) and (0, 2, 3)
-      pushTriangle(
-        frontVertices[0],
-        frontVertices[1],
-        frontVertices[2],
-        [0, 0, 1],
-        frontColor,
-      );
-      pushTriangle(
-        frontVertices[0],
-        frontVertices[2],
-        frontVertices[3],
-        [0, 0, 1],
-        frontColor,
-      );
-
-      // --- 2. BACK FACE (Normal pointing away from viewer: [0, 0, -1]) ---
-      // Triangulate CW quad reversed to keep outward normal: (2, 1, 0) and (3, 2, 0)
-      pushTriangle(
-        backVertices[2],
-        backVertices[1],
-        backVertices[0],
-        [0, 0, -1],
-        sideColor,
-      );
-      pushTriangle(
-        backVertices[3],
-        backVertices[2],
-        backVertices[0],
-        [0, 0, -1],
-        sideColor,
-      );
-
-      // --- 3. EXTRUDED SIDE WALLS (Connecting each front edge to its back edge) ---
-      for (let edge = 0; edge < 4; edge++) {
-        const nextEdge = (edge + 1) % 4;
-
-        // Calculate edge direction and outward 2D perpendicular normal
-        const dx = shifted2D[nextEdge][0] - shifted2D[edge][0];
-        const dy = shifted2D[nextEdge][1] - shifted2D[edge][1];
-        const edgeLength = Math.hypot(dx, dy);
-        const outwardNormal = [dy / edgeLength, -dx / edgeLength, 0.0];
-
-        // Quad formed by: Front[edge], Back[edge], Back[nextEdge], Front[nextEdge]
+    const polygons = strokes.split(",").map(segment => {
+      const rectangle = RECT_SEGMENTS[segment];
+      return rectangle
+        ? createRectanglePolygon(...rectangle)
+        : createDiagonalPolygon(...DIAG_SEGMENTS[segment]);
+    });
+    const { faces, edges } = unionStrokes(polygons);
+    const point = ([x, y], z) => [x + xOffset, y - 0.75, z];
+    // Disjoint face pieces avoid coplanar overlap; internal stroke walls disappear.
+    for (const face of faces) {
+      for (let i = 1; i < face.length - 1; i++) {
         pushTriangle(
-          frontVertices[edge],
-          backVertices[edge],
-          backVertices[nextEdge],
-          outwardNormal,
-          sideColor,
+          point(face[0], zFront), point(face[i], zFront), point(face[i + 1], zFront),
+          [0, 0, 1], frontColor,
         );
         pushTriangle(
-          frontVertices[edge],
-          backVertices[nextEdge],
-          frontVertices[nextEdge],
-          outwardNormal,
-          sideColor,
+          point(face[i + 1], zBack), point(face[i], zBack), point(face[0], zBack),
+          [0, 0, -1], sideColor,
         );
       }
+    }
+    for (const [a, b] of edges) {
+      const dx = b[0] - a[0];
+      const dy = b[1] - a[1];
+      const length = Math.hypot(dx, dy);
+      const normal = [dy / length, -dx / length, 0];
+      pushTriangle(
+        point(a, zFront), point(a, zBack), point(b, zBack), normal, sideColor,
+      );
+      pushTriangle(
+        point(a, zFront), point(b, zBack), point(b, zFront), normal, sideColor,
+      );
     }
   }
 
