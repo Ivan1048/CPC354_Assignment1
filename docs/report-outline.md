@@ -4,7 +4,7 @@ Planning document, not a completed report. Based on the supplied current assignm
 
 ## Report format and structure
 
-Use Arial 11 pt, 1.5 line spacing, and normal margins. The brief's section numbering is inconsistent; use consecutive numbering for the seven substantive sections below. Its historical-evolution discussion belongs within Literature Review. Include a cover and contents page as needed.
+Use Times New Roman 12 pt, 1.5 line spacing, and normal margins, following the user's requested font override of the brief's Arial 11 pt specification. The brief's section numbering is inconsistent; use consecutive numbering for the seven substantive sections below. Its historical-evolution discussion belongs within Literature Review. Include a cover and contents page as needed.
 
 | Section | Suggested length from brief | Marks | Required evidence |
 | --- | --- | --- | --- |
