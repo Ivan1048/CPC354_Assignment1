@@ -54,7 +54,7 @@ tests/                     Geometry, animation, playback, and matrix regression 
 - Configure extrusion depth and front/side colors before starting. Geometry or color changes reset playback.
 - Choose dual, single, or per-letter rainbow colors; toggle directional lighting.
 - Start the sequence: rotate right 180°, return, rotate left 180°, return, enlarge, then move continuously.
-- Select hover, continuous spin, or figure-eight drift for the final motion. Live mode changes blend over 0.65 animation seconds, including interrupted changes.
+- Select hover, continuous spin, or figure-eight drift for the final motion. Live motion and repeat-setting changes blend over 0.65 animation seconds, including interrupted changes. Spin targets are unwrapped during blending to avoid a flip at the half-turn boundary.
 - Stroke faces are partitioned into non-overlapping pieces, and only exposed union boundaries are extruded. Vertical stroke joins overlap to avoid gaps; D has chamfered right corners and zero has a slash.
 - The camera fits a sphere around the actual mesh bounds at hero scale, plus the final-motion translation envelope. Its distance stays fixed during playback so enlargement remains visible without camera pumping.
 - Change playback speed while running. Pause/resume preserves the current pose; Reset returns to the initial pose without restoring all settings.

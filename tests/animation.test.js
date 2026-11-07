@@ -124,3 +124,35 @@ test('motion changes and interrupted blends preserve pose, including while pause
   player.elapsed+=0.7;
   samePose(player.getPose({motion:'hover'}),computeIdentPose(player.elapsed,{motion:'hover'}));
 });
+
+test('changing repeat mode preserves the displayed pose, including while paused', () => {
+  const player = new AnimationPlayer();
+  player.start();
+  player.elapsed = 100;
+  const before = player.getPose({ motion: 'orbit', autoLoop: false });
+  samePose(before, player.getPose({ motion: 'orbit', autoLoop: true }));
+  player.elapsed += 0.2;
+  const middle = player.getPose({ motion: 'orbit', autoLoop: true });
+  player.togglePause();
+  samePose(middle, player.getPose({ motion: 'orbit', autoLoop: false }));
+  player.elapsed += 0.7;
+  samePose(player.getPose({ motion: 'orbit', autoLoop: false }),
+    computeIdentPose(player.elapsed, { motion: 'orbit', autoLoop: false }));
+});
+
+test('a spin blend crosses the half-turn boundary without flipping', () => {
+  const player = new AnimationPlayer();
+  player.start();
+  player.elapsed = 14.38;
+  player.getPose({ motion: 'hover' });
+  let previous = player.getPose({ motion: 'spin' });
+  for (let frame = 1; frame <= 80; frame++) {
+    player.elapsed = 14.38 + frame * 0.01;
+    const pose = player.getPose({ motion: 'spin' });
+    const angleStep = Math.atan2(Math.sin(pose.rotY - previous.rotY),
+      Math.cos(pose.rotY - previous.rotY));
+    assert.ok(Math.abs(angleStep) < 0.12, '10ms frame must not flip orientation');
+    previous = pose;
+  }
+  samePose(previous, computeIdentPose(player.elapsed, { motion: 'spin' }));
+});
